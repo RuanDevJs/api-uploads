@@ -14,7 +14,7 @@ class UsersController {
   async find(req, res) {
     const { id } = req.params;
     try {
-      const rows = await UsersRepositories.findById({ id });
+      const [rows] = await UsersRepositories.findById(id);
       return res.status(200).json(rows);
     } catch {
       const rows = await UsersRepositories.findById();
@@ -43,23 +43,21 @@ class UsersController {
     try {
       const { email, password } = req.body;
 
-      const rows = await UsersRepositories.login({ email, password });
+      const [rows] = await UsersRepositories.authenticate({ email, password });
       return res.status(200).json(rows);
-    } catch {
-      const rows = await UsersRepositories.findAll();
-      return res.status(400).json(rows);
+    } catch (e) {
+      return res.status(400).json({ error: e });
     }
   }
 
-  async update_image(req, res) {
+  async update(req, res) {
     try {
-      const { image_path } = req.body;
+      const { name, email, image_path } = req.body;
       const { id } = req.params;
-      const rows = await UsersRepositories.update_img(id, image_path);
+      const rows = await UsersRepositories.update(id, { name, email, image_path });
       return res.status(200).json(rows);
-    } catch {
-      const rows = await UsersRepositories.findAll();
-      return res.status(400).json(rows);
+    } catch (e) {
+      return res.status(400).json({ error: e });
     }
   }
 }

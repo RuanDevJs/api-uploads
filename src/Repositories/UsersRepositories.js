@@ -10,7 +10,7 @@ class UsersRepositories {
     }
   }
 
-  async findById({ id }) {
+  async findById(id) {
     try {
       const rows = await UsersModel.find({ _id: id });
       return rows;
@@ -43,7 +43,7 @@ class UsersRepositories {
     }
   }
 
-  async login({ email, password }) {
+  async authenticate({ email, password }) {
     try {
       const rows = await UsersModel.find({ email: email, password: password });
       return rows;
@@ -52,9 +52,15 @@ class UsersRepositories {
     }
   }
 
-  async update_img(id, image_path) {
+  async update(id, { name, email, image_path }) {
     try {
-      const rows = await UsersModel.findByIdAndUpdate(id, { image_path: image_path });
+      const rows = await UsersModel.findByIdAndUpdate(id, {
+        name: name,
+        email: email,
+        image_path: image_path,
+      }, {
+        new: true,
+      });
       return rows;
     } catch (e) {
       return e;
